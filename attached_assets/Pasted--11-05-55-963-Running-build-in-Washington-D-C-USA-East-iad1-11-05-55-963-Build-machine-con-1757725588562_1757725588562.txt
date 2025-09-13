@@ -1,0 +1,51 @@
+[11:05:55.963] Running build in Washington, D.C., USA (East) – iad1
+[11:05:55.963] Build machine configuration: 2 cores, 8 GB
+[11:05:55.979] Cloning github.com/sylver-cassart/icebreaker-generator (Branch: main, Commit: 8146728)
+[11:05:55.987] Skipping build cache, deployment was triggered without cache.
+[11:05:56.264] Cloning completed: 284.000ms
+[11:05:56.302] Found .vercelignore
+[11:05:56.309] Removed 25 ignored files defined in .vercelignore
+[11:05:56.309]   /.git/config
+[11:05:56.309]   /.git/description
+[11:05:56.309]   /.git/FETCH_HEAD
+[11:05:56.309]   /.git/HEAD
+[11:05:56.309]   /.git/hooks/applypatch-msg.sample
+[11:05:56.309]   /.git/hooks/commit-msg.sample
+[11:05:56.309]   /.git/hooks/fsmonitor-watchman.sample
+[11:05:56.309]   /.git/hooks/post-update.sample
+[11:05:56.310]   /.git/hooks/pre-applypatch.sample
+[11:05:56.310]   /.git/hooks/pre-commit.sample
+[11:05:56.620] Running "vercel build"
+[11:05:57.003] Vercel CLI 47.1.1
+[11:05:57.804] Installing dependencies...
+[11:06:02.257] npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+[11:06:02.287] npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+[11:06:07.212] 
+[11:06:07.213] added 485 packages in 9s
+[11:06:07.213] 
+[11:06:07.214] 65 packages are looking for funding
+[11:06:07.214]   run `npm fund` for details
+[11:06:07.379] 
+[11:06:07.380] > rest-express@1.0.0 build
+[11:06:07.380] > vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+[11:06:07.381] 
+[11:06:07.670] [36mvite v5.4.19 [32mbuilding for production...[36m[39m
+[11:06:07.717] transforming...
+[11:06:07.960] Browserslist: browsers data (caniuse-lite) is 11 months old. Please run:
+[11:06:07.961]   npx update-browserslist-db@latest
+[11:06:07.961]   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+[11:06:08.864] 
+[11:06:08.865] A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+[11:06:11.636] [32m✓[39m 1721 modules transformed.
+[11:06:11.893] rendering chunks...
+[11:06:11.902] computing gzip size...
+[11:06:11.918] [2m../dist/public/[22m[32mindex.html                 [39m[1m[2m  1.13 kB[22m[1m[22m[2m │ gzip:   0.60 kB[22m
+[11:06:11.918] [2m../dist/public/[22m[2massets/[22m[35mindex-By6E7oGd.css  [39m[1m[2m 72.25 kB[22m[1m[22m[2m │ gzip:  11.74 kB[22m
+[11:06:11.919] [2m../dist/public/[22m[2massets/[22m[36mindex-C3LPY7Hs.js   [39m[1m[2m331.10 kB[22m[1m[22m[2m │ gzip: 106.19 kB[22m
+[11:06:11.919] [32m✓ built in 4.23s[39m
+[11:06:11.950] 
+[11:06:11.950]   dist/index.js  17.0kb
+[11:06:11.950] 
+[11:06:11.950] ⚡ Done in 5ms
+[11:06:11.966] Error: No Output Directory named "dist" found after the Build completed. Update vercel.json#outputDirectory to ensure the correct output directory is generated.
+[11:06:11.966] Learn More: https://vercel.link/missing-public-directory
