@@ -12,13 +12,8 @@ export default function Navigation() {
       label: "Generator",
       icon: Home,
       testId: "nav-home"
-    },
-    {
-      path: "/analytics",
-      label: "Analytics",
-      icon: BarChart3,
-      testId: "nav-analytics"
     }
+    // Analytics removed from public navigation - access via direct URL only
   ];
 
   return (
