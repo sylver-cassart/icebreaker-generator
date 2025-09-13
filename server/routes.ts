@@ -60,7 +60,7 @@ function getErrorType(error: unknown): string {
   return "unknown-error";
 }
 
-export async function registerRoutes(app: Express): Promise<Server> {
+export async function registerRoutes(app: Express): Promise<Server | void> {
   // Generate icebreakers endpoint
   app.post("/api/generate-icebreakers", async (req, res) => {
     const startTime = Date.now();
@@ -148,7 +148,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ status: "ok", timestamp: new Date().toISOString() });
   });
 
-  const httpServer = createServer(app);
-
-  return httpServer;
+  // Only create HTTP server in development
+  if (process.env.NODE_ENV === 'development') {
+    const httpServer = createServer(app);
+    return httpServer;
+  }
+  
+  // In production/serverless, don't create a server
+  return;
 }
