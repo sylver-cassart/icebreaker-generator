@@ -5,7 +5,19 @@ import { generateIcebreakers } from "./openai";
 import { storage } from "./storage";
 
 const generateIcebreakersSchema = z.object({
-  profileText: z.string().min(10, "Profile text must be at least 10 characters").max(5000, "Profile text too long"),
+  profileText: z.string()
+    .min(10, "Profile text must be at least 10 characters")
+    .max(2000, "Profile text too long - maximum 2000 characters allowed")
+    .refine(text => {
+      // Basic spam detection - reject if too many repeated characters
+      const repeatedPattern = /(.)\1{10,}/;
+      return !repeatedPattern.test(text);
+    }, "Invalid input detected")
+    .refine(text => {
+      // Reject if mostly non-alphabetic characters
+      const alphaCount = (text.match(/[a-zA-Z]/g) || []).length;
+      return alphaCount > text.length * 0.3;
+    }, "Input must contain meaningful text"),
   style: z.enum(["professional", "casual", "creative"]).default("professional"),
 });
 
@@ -70,6 +82,32 @@ export async function registerRoutes(app: Express): Promise<Server | void> {
     };
 
     try {
+      // Additional security checks
+      const userAgent = req.get('User-Agent') || '';
+      const contentLength = parseInt(req.get('Content-Length') || '0');
+      
+      // Block common bot patterns
+      const botPatterns = [
+        /bot|crawler|spider|scraper/i,
+        /curl|wget|postman/i,
+        /python|go-http|java|node-fetch/i
+      ];
+      
+      if (botPatterns.some(pattern => pattern.test(userAgent))) {
+        return res.status(403).json({
+          error: "Automated requests not allowed",
+          code: "BOT_DETECTED"
+        });
+      }
+
+      // Check request size
+      if (contentLength > 10000) { // 10KB limit
+        return res.status(413).json({
+          error: "Request too large",
+          code: "PAYLOAD_TOO_LARGE"
+        });
+      }
+
       // Validate request body
       const { profileText, style } = generateIcebreakersSchema.parse(req.body);
       

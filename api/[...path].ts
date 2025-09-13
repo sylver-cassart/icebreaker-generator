@@ -8,17 +8,22 @@ async function createApp() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
 
+  // Enhanced rate limiting for production
   // Note: Rate limiting won't persist across serverless instances
   // For production, consider using an external store like Redis
   const limiter = rateLimit({
     windowMs: 60 * 1000, // 1 minute
-    max: 10, // 10 requests per window per IP
+    max: 5, // Reduced to 5 requests per minute per IP for better protection
     message: {
-      error: "Rate limit exceeded",
+      error: "Rate limit exceeded. Maximum 5 requests per minute allowed.",
       code: "RATE_LIMIT_EXCEEDED"
     },
     standardHeaders: true,
     legacyHeaders: false,
+    // Skip successful requests for some endpoints
+    skipSuccessfulRequests: false,
+    // Skip failed requests
+    skipFailedRequests: true,
   });
 
   app.use("/api", limiter);
