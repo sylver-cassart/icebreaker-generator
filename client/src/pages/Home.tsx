@@ -122,8 +122,11 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="mt-16 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>
+          <p className="mb-2">
             Built for professional outreach. Always review and personalize before sending.
+          </p>
+          <p>
+            made with ♥ sylver cassart
           </p>
         </footer>
       </div>
