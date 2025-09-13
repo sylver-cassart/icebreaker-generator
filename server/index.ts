@@ -1,10 +1,25 @@
 import express, { type Request, Response, NextFunction } from "express";
+import rateLimit from "express-rate-limit";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Rate limiting: 10 requests per minute per IP
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 10, // 10 requests per window per IP
+  message: {
+    error: "Rate limit exceeded",
+    code: "RATE_LIMIT_EXCEEDED"
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use("/api", limiter);
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -41,10 +56,25 @@ app.use((req, res, next) => {
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    
+    // Sanitize error messages to avoid leaking sensitive information
+    let error: string;
+    let code: string;
+    
+    if (status >= 400 && status < 500) {
+      // Client errors - safe to return more details
+      error = err.message || "Bad Request";
+      code = err.code || "CLIENT_ERROR";
+    } else {
+      // Server errors - return generic message
+      error = "Internal Server Error";
+      code = "INTERNAL_SERVER_ERROR";
+      console.error("Server error:", err);
+    }
 
-    res.status(status).json({ message });
-    throw err;
+    res.status(status).json({ error, code });
+    
+    // Don't re-throw the error to avoid crashing the process
   });
 
   // importantly only setup vite in development and after

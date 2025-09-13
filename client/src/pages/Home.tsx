@@ -34,33 +34,39 @@ export default function Home() {
     setResults(null);
 
     try {
-      // TODO: Replace with actual API call to /api/generate-icebreakers
-      // Simulating API call for prototype
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // TODO: Remove mock functionality - replace with real API
-      const mockResults: GenerationResult = {
-        icebreakers: [
-          {
-            line1: "Your recent growth achievements show impressive strategic thinking.",
-            line2: "I help teams automate their reporting workflows—could save you hours weekly on data analysis."
-          },
-          {
-            line1: "Noticed your focus on retention and LTV optimization.",
-            line2: "I build no-code automations that turn customer behavior into actionable growth insights."
-          },
-          {
-            line1: "Your tech stack alignment with growth metrics caught my attention.",
-            line2: "I specialize in connecting tools like yours into seamless reporting workflows for founders."
-          }
-        ],
-        notes: "Focused on growth expertise and automation value proposition"
-      };
-      
-      setResults(mockResults);
+      const response = await fetch("/api/generate-icebreakers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          profileText: profileText.trim(),
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      setResults(data);
     } catch (err) {
-      setError("Failed to generate icebreakers. Please try again.");
       console.error("Generation error:", err);
+      
+      if (err instanceof Error) {
+        if (err.message.includes("fetch")) {
+          setError("Network error - please check your connection and try again");
+        } else if (err.message.includes("API key")) {
+          setError("API configuration error - please contact support");
+        } else if (err.message.includes("quota") || err.message.includes("rate limit")) {
+          setError("Service temporarily unavailable - please try again in a few minutes");
+        } else {
+          setError(err.message);
+        }
+      } else {
+        setError("Failed to generate icebreakers. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
