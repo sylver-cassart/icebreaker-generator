@@ -8,8 +8,8 @@ import { randomUUID } from "crypto";
 // Initialize OpenAI
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Model fallback strategy - try gpt-4o first as gpt-5 may not be available
-const MODELS = ["gpt-4o", "gpt-5"] as const;
+// Model fallback strategy - use faster models for serverless
+const MODELS = ["gpt-3.5-turbo", "gpt-4o-mini"] as const;
 type Model = typeof MODELS[number];
 
 // Types
@@ -107,7 +107,8 @@ async function tryGenerateWithModel(model: Model, systemPrompt: string, profileT
     ],
     response_format: { type: "json_object" },
     temperature: 0.7,
-    max_tokens: 800,
+    max_tokens: 600,
+    timeout: 20000, // 20 second timeout
   });
 
   const result = JSON.parse(response.choices[0].message.content || "{}");
@@ -124,7 +125,25 @@ async function tryGenerateWithModel(model: Model, systemPrompt: string, profileT
 
 type IcebreakerStyle = "professional" | "casual" | "creative";
 
+// Timeout wrapper for promises
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      reject(new Error(`Operation timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+
+    promise
+      .then(resolve)
+      .catch(reject)
+      .finally(() => clearTimeout(timeoutId));
+  });
+}
+
 async function generateIcebreakers(profileText: string, style: IcebreakerStyle = "professional"): Promise<IcebreakerResult> {
+  // Early validation of API key
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error("Invalid or missing OpenAI API key");
+  }
   // Define style-specific tone instructions
   const styleInstructions = {
     professional: "Maintain a formal, business-focused tone. Use industry terminology appropriately. Be respectful and polite. Focus on business value and professional achievements.",
@@ -202,7 +221,11 @@ I'm a brand, web & product designer who also sets up AI automations (Zapier/n8n)
   for (const model of MODELS) {
     try {
       console.log(`Attempting to generate icebreakers with model: ${model}`);
-      const result = await tryGenerateWithModel(model, systemPrompt, profileText);
+      // Add timeout wrapper to prevent hanging
+      const result = await withTimeout(
+        tryGenerateWithModel(model, systemPrompt, profileText),
+        20000 // 20 second timeout
+      );
       console.log(`Successfully generated icebreakers using model: ${model}`);
       return result;
     } catch (error) {
