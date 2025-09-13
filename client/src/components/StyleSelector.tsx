@@ -36,10 +36,10 @@ export default function StyleSelector({
     <div className="space-y-4">
       <div className="space-y-2">
         <Label className="text-base font-medium">
-          Icebreaker Style
+          Breakr Style
         </Label>
         <p className="text-sm text-muted-foreground">
-          Choose the tone and approach for your icebreakers
+          Choose the tone and approach for your breakrs
         </p>
       </div>
       

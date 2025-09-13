@@ -28,7 +28,7 @@ export default function GenerateButton({
       ) : (
         <>
           <Sparkles className="w-5 h-5 mr-2" />
-          Generate Icebreakers
+          Generate Breakrs
         </>
       )}
     </Button>

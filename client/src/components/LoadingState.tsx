@@ -6,7 +6,7 @@ export default function LoadingState() {
     <div className="space-y-6" data-testid="loading-state">
       <div className="text-center">
         <h2 className="text-2xl font-semibold text-foreground mb-2">
-          Analyzing Profile & Generating Icebreakers
+          Analyzing Profile & Generating Breakrs
         </h2>
         <p className="text-muted-foreground">
           AI is crafting personalized conversation starters...

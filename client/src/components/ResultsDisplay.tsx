@@ -17,7 +17,7 @@ export default function ResultsDisplay({ icebreakers, notes }: ResultsDisplayPro
     <div className="space-y-6" data-testid="results-display">
       <div className="text-center">
         <h2 className="text-2xl font-semibold text-foreground mb-2">
-          Your Personalized Icebreakers
+          Your Personalized Breakrs
         </h2>
         <p className="text-muted-foreground">
           Choose the one that fits your style and copy it to use in your outreach

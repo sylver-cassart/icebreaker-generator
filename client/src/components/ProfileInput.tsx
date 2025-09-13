@@ -27,7 +27,7 @@ export default function ProfileInput({
           LinkedIn Profile Content
         </Label>
         <p className="text-sm text-muted-foreground">
-          Copy and paste the person's headline, about section, experience, or recent posts. The more specific details, the better the icebreakers.
+          Copy and paste the person's headline, about section, experience, or recent posts. The more specific details, the better the breakrs.
         </p>
       </div>
       

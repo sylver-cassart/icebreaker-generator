@@ -21,7 +21,7 @@ export default function IcebreakerCard({ line1, line2, index }: IcebreakerCardPr
       setCopied(true);
       toast({
         title: "Copied to clipboard",
-        description: "Icebreaker ready to paste into your message",
+        description: "Breakr ready to paste into your message",
       });
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {

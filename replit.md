@@ -1,8 +1,8 @@
-# LinkedIn Icebreaker Generator
+# Breakr Generator
 
 ## Overview
 
-A React-based web application that generates personalized 2-line icebreakers for LinkedIn outreach using AI. Users paste LinkedIn profile content, and the system creates three tailored conversation starters designed for cold emails or direct messages. The application focuses on professional, human-sounding icebreakers that avoid generic compliments and sales-heavy language.
+A React-based web application that generates personalized 2-line breakrs for LinkedIn outreach using AI. Users paste LinkedIn profile content, and the system creates three tailored conversation starters designed for cold emails or direct messages. The application focuses on professional, human-sounding breakrs that avoid generic compliments and sales-heavy language.
 
 ## User Preferences
 
