@@ -66,6 +66,14 @@ async function createApp() {
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     
+    // Enhanced logging for debugging
+    console.error("=== ERROR HANDLER ===");
+    console.error("Status:", status);
+    console.error("Error message:", err.message);
+    console.error("Error stack:", err.stack);
+    console.error("Error code:", err.code);
+    console.error("=====================");
+    
     // Sanitize error messages to avoid leaking sensitive information
     let error: string;
     let code: string;

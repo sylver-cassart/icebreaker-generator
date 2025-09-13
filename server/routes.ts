@@ -114,8 +114,18 @@ export async function registerRoutes(app: Express): Promise<Server | void> {
       analyticsData.style = style;
       analyticsData.profileLength = profileText.length;
 
+      console.log("=== STARTING GENERATION ===");
+      console.log("Profile text length:", profileText.length);
+      console.log("Selected style:", style);
+      console.log("OpenAI API Key present:", !!process.env.OPENAI_API_KEY);
+      console.log("============================");
+      
       // Generate icebreakers using OpenAI
       const result = await generateIcebreakers(profileText, style);
+      
+      console.log("=== GENERATION SUCCESS ===");
+      console.log("Generated icebreakers count:", result.icebreakers?.length || 0);
+      console.log("==========================");
       
       const generationTime = Date.now() - startTime;
       analyticsData.success = true;
@@ -126,7 +136,12 @@ export async function registerRoutes(app: Express): Promise<Server | void> {
 
       res.json(result);
     } catch (error) {
-      console.error("Generate icebreakers error:", error);
+      console.error("=== GENERATION ERROR ===");
+      console.error("Error type:", typeof error);
+      console.error("Error constructor:", error?.constructor?.name);
+      console.error("Error message:", error instanceof Error ? error.message : String(error));
+      console.error("Error stack:", error instanceof Error ? error.stack : 'No stack');
+      console.error("========================");
       
       const generationTime = Date.now() - startTime;
       analyticsData.event = 'generation_failed';

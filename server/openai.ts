@@ -3,8 +3,8 @@ import OpenAI from "openai";
 // the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Model fallback strategy
-const MODELS = ["gpt-5", "gpt-4o"] as const;
+// Model fallback strategy - try gpt-4o first as gpt-5 may not be available
+const MODELS = ["gpt-4o", "gpt-5"] as const;
 type Model = typeof MODELS[number];
 
 export interface IcebreakerResult {
@@ -140,6 +140,13 @@ I'm a brand, web & product designer who also sets up AI automations (Zapier/n8n)
 
   let lastError: Error | null = null;
 
+  console.log('=== STARTING OPENAI GENERATION ===');
+  console.log('Available models:', MODELS);
+  console.log('Profile text length:', profileText.length);
+  console.log('Style:', style);
+  console.log('API Key configured:', !!process.env.OPENAI_API_KEY);
+  console.log('===================================');
+  
   // Try each model in order until one succeeds
   for (const model of MODELS) {
     try {
@@ -148,12 +155,19 @@ I'm a brand, web & product designer who also sets up AI automations (Zapier/n8n)
       console.log(`Successfully generated icebreakers using model: ${model}`);
       return result;
     } catch (error) {
-      console.error(`Model ${model} failed:`, error);
+      console.error(`=== MODEL ${model} ERROR ===`);
+      console.error('Error type:', typeof error);
+      console.error('Error message:', error instanceof Error ? error.message : String(error));
+      console.error('Error name:', error instanceof Error ? error.name : 'Unknown');
+      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack');
+      console.error('========================');
+      
       lastError = error instanceof Error ? error : new Error("Unknown error");
       
       // If it's an API key or quota error, don't try other models
       if (error instanceof Error) {
         if (error.message.includes("API key") || error.message.includes("quota")) {
+          console.log('API key or quota error detected, not trying other models');
           break;
         }
       }
