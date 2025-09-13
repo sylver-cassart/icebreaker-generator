@@ -71,7 +71,16 @@ async function tryGenerateWithModel(model: Model, systemPrompt: string, profileT
   };
 }
 
-export async function generateIcebreakers(profileText: string): Promise<IcebreakerResult> {
+export type IcebreakerStyle = "professional" | "casual" | "creative";
+
+export async function generateIcebreakers(profileText: string, style: IcebreakerStyle = "professional"): Promise<IcebreakerResult> {
+  // Define style-specific tone instructions
+  const styleInstructions = {
+    professional: "Maintain a formal, business-focused tone. Use industry terminology appropriately. Be respectful and polite. Focus on business value and professional achievements.",
+    casual: "Use a friendly, conversational tone. Be warm and approachable. Use contractions and informal language where appropriate. Focus on shared interests and human connections.", 
+    creative: "Be engaging and memorable. Use creative analogies or unexpected angles. Show personality while remaining professional. Stand out from typical outreach messages."
+  };
+
   const systemPrompt = `You are an assistant that writes concise, personal, 2-line outreach icebreakers for cold emails or LinkedIn DMs.
 
 Goal
@@ -96,9 +105,12 @@ Geography / market segment
 
 Mutual interests or niche expertise
 
-Tone & style
+Style Instructions for ${style.toUpperCase()} tone:
+${styleInstructions[style]}
 
-Human, warm, no hype. Australian spelling. No emojis. No fluff.
+General Tone Guidelines
+
+Australian spelling. No emojis. No fluff.
 
 No generic compliments ("great profile"). Be specific.
 

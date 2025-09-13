@@ -1,11 +1,11 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import ProfileInput from "@/components/ProfileInput";
+import StyleSelector, { type IcebreakerStyle } from "@/components/StyleSelector";
 import GenerateButton from "@/components/GenerateButton";
 import ResultsDisplay from "@/components/ResultsDisplay";
 import LoadingState from "@/components/LoadingState";
 import ErrorDisplay from "@/components/ErrorDisplay";
-import ThemeToggle from "@/components/ThemeToggle";
 
 interface Icebreaker {
   line1: string;
@@ -19,6 +19,7 @@ interface GenerationResult {
 
 export default function Home() {
   const [profileText, setProfileText] = useState("");
+  const [selectedStyle, setSelectedStyle] = useState<IcebreakerStyle>("professional");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<GenerationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +42,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           profileText: profileText.trim(),
+          style: selectedStyle,
         }),
       });
 
@@ -78,21 +80,22 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header with theme toggle */}
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
-
+    <div className="bg-gradient-to-br from-background via-background to-muted/20">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <Header />
         
         <div className="space-y-8">
           {/* Input Section */}
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-2xl mx-auto space-y-8">
             <ProfileInput
               value={profileText}
               onChange={setProfileText}
+              disabled={loading}
+            />
+            
+            <StyleSelector
+              value={selectedStyle}
+              onChange={setSelectedStyle}
               disabled={loading}
             />
           </div>
