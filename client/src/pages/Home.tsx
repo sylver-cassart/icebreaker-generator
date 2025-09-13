@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import ProfileInput from "@/components/ProfileInput";
-import StyleSelector, { type IcebreakerStyle } from "@/components/StyleSelector";
+import { type IcebreakerStyle } from "@/components/StyleSelector";
 import GenerateButton from "@/components/GenerateButton";
 import ResultsDisplay from "@/components/ResultsDisplay";
 import LoadingState from "@/components/LoadingState";
@@ -91,12 +91,8 @@ export default function Home() {
               value={profileText}
               onChange={setProfileText}
               disabled={loading}
-            />
-            
-            <StyleSelector
-              value={selectedStyle}
-              onChange={setSelectedStyle}
-              disabled={loading}
+              selectedStyle={selectedStyle}
+              onStyleChange={setSelectedStyle}
             />
           </div>
 
